@@ -1,3 +1,4 @@
+from rest_framework import request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -18,15 +19,14 @@ class StockViewSet(ModelViewSet):
     queryset = Stock.objects.all()
     serializer_class = StockSerializer
     filterset_fields = ['products']
-    def list(self, request):
-        product_name = request.get('products')
+    def get_queryset(self):
+        product_name = self.request.query_params.get('products')
         if product_name:
             product = Product.objects.get(title=product_name)
-            stocks = Stock.objects.filter(product=product.id)
-            stocklist = StockSerializer(stocks, many=True)
-            return Response(stocklist.data)
+            queryset = Stock.objects.filter(product=product.id)
+            return queryset
         else:
-            return super().list(request)
+            return super().get_queryset()
 
 
 
