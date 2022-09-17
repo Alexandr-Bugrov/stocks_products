@@ -23,10 +23,17 @@ class StockViewSet(ModelViewSet):
         if product_name:
             product = Product.objects.get(title=product_name)
             stocks = Stock.objects.filter(product=product.id)
-            stocklist = StockSerializer(stocks, many=True)
-            return Response(stocklist.data)
+
+            page = self.paginate_queryset(stocks)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(stocks, many=True)
+            return Response(serializer.data)
+
         else:
-            return super().list(request)
+            return super().list(self, request)
 
 
 
