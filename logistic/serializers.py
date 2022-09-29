@@ -14,7 +14,6 @@ class ProductPositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockProduct
         fields = ['id', 'stock', 'product', 'quantity', 'price']
-        extra_kwargs = {'stock': {'required': False}}
 
 
 class StockSerializer(serializers.ModelSerializer):
